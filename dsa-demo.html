@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Visualizer - LinkedList & BST Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        :root {
+            --primary: #6366f1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --darker: #0f0f23;
+            --card: #1e1e3f;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center; margin-bottom: 40px;
+            background: var(--card); padding: 30px; border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; color: var(--primary); }
+        .header p { color: #999; }
+        .back-link {
+            display: inline-block; margin-bottom: 20px;
+            color: var(--primary); text-decoration: none; font-weight: 500;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .demo-section {
+            background: var(--card); padding: 25px; border-radius: 12px;
+            border-top: 3px solid var(--primary);
+        }
+        .demo-section h2 { font-size: 1.5em; margin-bottom: 20px; color: var(--primary); }
+        .input-group {
+            display: flex; gap: 10px; margin-bottom: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            flex: 1; padding: 10px 15px; background: #0f0f23; border: 1px solid #333;
+            color: #e0e0e0; border-radius: 6px; font-size: 1em;
+        }
+        button {
+            padding: 10px 20px; background: var(--primary); color: white; border: none;
+            border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s;
+        }
+        button:hover { background: #5558dd; }
+        .output {
+            background: #0f0f23; padding: 15px; border-radius: 6px;
+            min-height: 100px; border: 1px solid #333; font-family: 'Courier New';
+            font-size: 0.9em; color: #10b981; overflow-y: auto; max-height: 200px;
+        }
+        .visualization {
+            background: #0f0f23; padding: 20px; border-radius: 6px;
+            min-height: 150px; border: 1px solid #333; margin-top: 15px;
+            display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;
+        }
+        .node {
+            width: 40px; height: 40px; background: var(--primary);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 0.8em;
+        }
+        .node.highlight { background: var(--success); }
+        .node.deleted { background: var(--danger); opacity: 0.5; }
+        .arrow { color: var(--primary); font-size: 1.2em; }
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Portfolio</a>
+        <div class="header">
+            <h1>🎯 DSA Interactive Visualizer</h1>
+            <p>Explore Data Structures & Algorithms in Action</p>
+        </div>
+
+        <div class="grid">
+            <!-- LinkedList Demo -->
+            <div class="demo-section">
+                <h2>LinkedList</h2>
+                <div class="input-group">
+                    <input type="number" id="llInput" placeholder="Enter number">
+                    <button onclick="addToList()">Add</button>
+                    <button onclick="removeFromList()">Remove</button>
+                </div>
+                <div class="output" id="llOutput">List: empty</div>
+                <div class="visualization" id="llVisualization"></div>
+            </div>
+
+            <!-- Binary Search Tree Demo -->
+            <div class="demo-section">
+                <h2>Binary Search Tree</h2>
+                <div class="input-group">
+                    <input type="number" id="bstInput" placeholder="Enter number">
+                    <button onclick="insertBST()">Insert</button>
+                    <button onclick="resetBST()">Reset</button>
+                </div>
+                <div class="output" id="bstOutput">Tree: empty</div>
+                <div class="visualization" id="bstVisualization"></div>
+            </div>
+        </div>
+
+        <!-- Sorting Visualizer -->
+        <div class="demo-section">
+            <h2>Sorting Algorithms</h2>
+            <div class="input-group">
+                <button onclick="generateArray()">Generate Array</button>
+                <button onclick="bubbleSort()">Bubble Sort</button>
+                <button onclick="quickSort()">Quick Sort</button>
+            </div>
+            <div class="output" id="sortOutput">Array: [5, 2, 8, 1, 9]</div>
+            <div class="visualization" id="sortVisualization"></div>
+        </div>
+    </div>
+
+    <script>
+        let linkedList = [];
+        let bstValues = [];
+        let sortArray = [5, 2, 8, 1, 9, 3, 7, 4, 6];
+
+        function addToList() {
+            const val = parseInt(document.getElementById('llInput').value);
+            if (!isNaN(val)) {
+                linkedList.push(val);
+                updateLLDisplay();
+                document.getElementById('llInput').value = '';
+            }
+        }
+
+        function removeFromList() {
+            linkedList.pop();
+            updateLLDisplay();
+        }
+
+        function updateLLDisplay() {
+            document.getElementById('llOutput').textContent = 'List: [' + linkedList.join(' → ') + ']';
+            let html = '';
+            linkedList.forEach((val, i) => {
+                html += `<div class="node">${val}</div>`;
+                if (i < linkedList.length - 1) html += '<div class="arrow">→</div>';
+            });
+            document.getElementById('llVisualization').innerHTML = html || 'Empty';
+        }
+
+        function insertBST() {
+            const val = parseInt(document.getElementById('bstInput').value);
+            if (!isNaN(val)) {
+                bstValues.push(val);
+                bstValues.sort((a, b) => a - b);
+                updateBSTDisplay();
+                document.getElementById('bstInput').value = '';
+            }
+        }
+
+        function resetBST() {
+            bstValues = [];
+            updateBSTDisplay();
+        }
+
+        function updateBSTDisplay() {
+            document.getElementById('bstOutput').textContent = 'Tree: [' + bstValues.join(', ') + ']';
+            let html = '';
+            bstValues.forEach(val => {
+                html += `<div class="node">${val}</div>`;
+            });
+            document.getElementById('bstVisualization').innerHTML = html || 'Empty';
+        }
+
+        function generateArray() {
+            sortArray = Array.from({length: 9}, () => Math.floor(Math.random() * 10) + 1);
+            document.getElementById('sortOutput').textContent = 'Array: [' + sortArray.join(', ') + ']';
+            visualizeArray();
+        }
+
+        function visualizeArray() {
+            let html = '';
+            sortArray.forEach(val => {
+                html += `<div class="node" style="height: ${val * 30}px; width: 30px; line-height: 1;">${val}</div>`;
+            });
+            document.getElementById('sortVisualization').innerHTML = html;
+        }
+
+        async function bubbleSort() {
+            let arr = [...sortArray];
+            for (let i = 0; i < arr.length; i++) {
+                for (let j = 0; j < arr.length - 1; j++) {
+                    if (arr[j] > arr[j + 1]) [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+                    sortArray = arr;
+                    visualizeArray();
+                    await new Promise(r => setTimeout(r, 50));
+                }
+            }
+            document.getElementById('sortOutput').textContent = 'Sorted: [' + arr.join(', ') + ']';
+        }
+
+        async function quickSort() {
+            async function sort(arr, low, high) {
+                if (low < high) {
+                    let pi = partition(arr, low, high);
+                    await sort(arr, low, pi - 1);
+                    await sort(arr, pi + 1, high);
+                }
+            }
+            function partition(arr, low, high) {
+                let pivot = arr[high];
+                let i = low - 1;
+                for (let j = low; j < high; j++) {
+                    if (arr[j] < pivot) {
+                        i++;
+                        [arr[i], arr[j]] = [arr[j], arr[i]];
+                    }
+                }
+                [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+                return i + 1;
+            }
+            let arr = [...sortArray];
+            await sort(arr, 0, arr.length - 1);
+            sortArray = arr;
+            visualizeArray();
+            document.getElementById('sortOutput').textContent = 'Sorted: [' + arr.join(', ') + ']';
+        }
+
+        // Initialize
+        updateLLDisplay();
+        updateBSTDisplay();
+        visualizeArray();
+    </script>
+</body>
+</html>
