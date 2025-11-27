@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neel Patel | Developer Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e1e2e;
+            --darker: #11111b;
+            --light: #cdd6f4;
+            --card: #1e1e2e;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, #1a1a2e 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        header {
+            padding: 60px 0;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(99,102,241,0.1) 0%, transparent 100%);
+        }
+        .profile-img {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            margin-bottom: 20px;
+            background: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 48px; color: white;
+            margin: 0 auto 20px;
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        h1 span { color: var(--primary); }
+        .tagline { color: #888; font-size: 1.1rem; margin-bottom: 20px; }
+        .social-links { display: flex; gap: 15px; justify-content: center; }
+        .social-links a {
+            color: var(--light); font-size: 1.5rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .social-links a:hover { color: var(--primary); transform: translateY(-3px); }
+        
+        /* Stats */
+        .stats { display: flex; justify-content: center; gap: 40px; margin: 40px 0; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        .stat-label { color: #888; font-size: 0.9rem; }
+        
+        /* Projects Section */
+        .section-title {
+            text-align: center; font-size: 1.8rem; margin: 50px 0 30px;
+            position: relative;
+        }
+        .section-title::after {
+            content: ''; display: block; width: 60px; height: 3px;
+            background: var(--primary); margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        
+        /* Project Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px; padding: 20px 0 60px;
+        }
+        .project-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: var(--primary);
+        }
+        .project-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; }
+        .project-icon { font-size: 2rem; color: var(--primary); }
+        .project-status {
+            padding: 5px 12px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .status-checking { background: rgba(245,158,11,0.2); color: var(--warning); }
+        .status-online { background: rgba(16,185,129,0.2); color: var(--success); }
+        .status-offline { background: rgba(239,68,68,0.2); color: var(--danger); }
+        .project-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
+        .project-description { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
+        .tech-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .tech-tag {
+            background: rgba(99,102,241,0.2); color: var(--primary);
+            padding: 4px 10px; border-radius: 5px; font-size: 0.75rem;
+        }
+        .project-links { display: flex; gap: 10px; }
+        .project-link {
+            padding: 8px 16px; border-radius: 8px;
+            text-decoration: none; font-size: 0.85rem;
+            font-weight: 500; transition: all 0.3s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--secondary); }
+        .btn-outline { border: 1px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        
+        /* Footer */
+        footer {
+            text-align: center; padding: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #666;
+        }
+        
+        /* Pulse animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .status-checking i { animation: pulse 1.5s infinite; }
+        
+        @media (max-width: 768px) {
+            .projects-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+            .stats { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="profile-img">NP</div>
+            <h1>Neel <span>Patel</span></h1>
+            <p class="tagline">Full-Stack Developer | Master of IT Graduate</p>
+            <div class="social-links">
+                <a href="https://github.com/eng-neelpatel" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/neelpatel" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:neel@example.com" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="repo-count">3</div>
+                <div class="stat-label">Repositories</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">5+</div>
+                <div class="stat-label">Languages</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2025</div>
+                <div class="stat-label">Graduate</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">My Projects</h2>
+        <p style="text-align:center;color:#888;margin-bottom:30px;">Click "Check Status" to verify if each project is working</p>
+
+        <div class="projects-grid" id="projects-container">
+            <!-- Projects loaded via JS -->
+        </div>
+    </main>
+
+    <footer>
+        <p>Built with HTML, CSS & JavaScript | Hosted on GitHub Pages</p>
+        <p style="margin-top:10px;">Neel Patel 2025</p>
+    </footer>
+
+    <script>
+        const projects = [
+            {
+                name: "C++ DSA Library",
+                repo: "cpp-dsa-library",
+                description: "Comprehensive Data Structures & Algorithms library with LinkedList, BST, and 6 sorting algorithms. Built with modern C++17.",
+                icon: "fa-code",
+                tech: ["C++17", "Templates", "OOP", "DSA"],
+                github: "https://github.com/eng-neelpatel/cpp-dsa-library"
+            },
+            {
+                name: "TaskFlow API",
+                repo: "python-taskflow-api",
+                description: "Production-ready REST API with FastAPI, SQLAlchemy, JWT Auth, and comprehensive unit tests. Demonstrates clean architecture.",
+                icon: "fa-server",
+                tech: ["Python", "FastAPI", "SQLAlchemy", "pytest"],
+                github: "https://github.com/eng-neelpatel/python-taskflow-api"
+            },
+            {
+                name: "Portfolio Website",
+                repo: "portfolio",
+                description: "Interactive portfolio with live project status checker. Built with vanilla HTML, CSS & JavaScript.",
+                icon: "fa-globe",
+                tech: ["HTML5", "CSS3", "JavaScript", "GitHub API"],
+                github: "https://github.com/eng-neelpatel/portfolio"
+            }
+        ];
+
+        function createProjectCard(project) {
+            return `
+                <div class="project-card" data-repo="${project.repo}">
+                    <div class="project-header">
+                        <i class="fas ${project.icon} project-icon"></i>
+                        <span class="project-status status-checking" id="status-${project.repo}">
+                            <i class="fas fa-circle"></i> Checking...
+                        </span>
+                    </div>
+                    <h3 class="project-title">${project.name}</h3>
+                    <p class="project-description">${project.description}</p>
+                    <div class="tech-stack">
+                        ${project.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                    </div>
+                    <div class="project-links">
+                        <a href="${project.github}" target="_blank" class="project-link btn-primary">
+                            <i class="fab fa-github"></i> View Code
+                        </a>
+                        <button class="project-link btn-outline" onclick="checkStatus('${project.repo}')">
+                            <i class="fas fa-sync-alt"></i> Check Status
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            container.innerHTML = projects.map(createProjectCard).join('');
+        }
+
+        async function checkStatus(repo) {
+            const statusEl = document.getElementById(`status-${repo}`);
+            statusEl.className = 'project-status status-checking';
+            statusEl.innerHTML = '<i class="fas fa-circle"></i> Checking...';
+            
+            try {
+                const response = await fetch(`https://api.github.com/repos/eng-neelpatel/${repo}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    statusEl.className = 'project-status status-online';
+                    statusEl.innerHTML = '<i class="fas fa-circle"></i> Online';
+                } else {
+                    throw new Error('Not found');
+                }
+            } catch (error) {
+                statusEl.className = 'project-status status-offline';
+                statusEl.innerHTML = '<i class="fas fa-circle"></i> Offline';
+            }
+        }
+
+        async function checkAllProjects() {
+            for (const project of projects) {
+                await checkStatus(project.repo);
+                await new Promise(r => setTimeout(r, 500));
+            }
+        }
+
+        // Initialize
+        renderProjects();
+        checkAllProjects();
+    </script>
+</body>
+</html>
